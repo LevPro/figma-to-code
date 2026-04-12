@@ -27,12 +27,12 @@ def ollama(
     Note: Ollama must be running locally (ollama serve) before use.
     
     Args:
-        model: Model name from Ollama (overridden by MODEL env var)
-        base_url: Ollama server URL (overridden by BASE_URL env var).
-                  Default is http://localhost:11434 for local Ollama instances.
-        temperature: Sampling temperature 0-1 (overridden by TEMPERATURE env var)
-        reasoning: Enable reasoning (overridden by REASONING_EFFORT env var)
-        cache: Enable langchain in-memory cache (overridden by ENABLE_CACHE env var)
+        model: Model name from Ollama
+        base_url: Ollama server URL. Default is http://localhost:11434 for local Ollama instances.
+        temperature: Sampling temperature 0-1
+        reasoning: Enable reasoning
+        cache: Enable langchain in-memory cache
+        response_format: Pydantic model for structured output.
         
     Returns:
         ChatOllama configured instance ready for invocation

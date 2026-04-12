@@ -28,12 +28,13 @@ def openai(
     2. Function arguments (default values)
     
     Args:
-        apiKey: OpenAI API key (overridden by API_KEY env var)
-        model: Model name (overridden by MODEL env var)
-        base_url: API endpoint URL (overridden by BASE_URL env var)
-        temperature: Sampling temperature 0-1 (overridden by TEMPERATURE env var)
-        reasoning: Enable reasoning/thinking mode (overridden by REASONING env var)
-        cache: Enable langchain in-memory cache (overridden by ENABLE_CACHE env var)
+        apiKey: OpenAI API key
+        model: Model name
+        base_url: API endpoint URL
+        temperature: Sampling temperature 0-1
+        reasoning: Enable reasoning/thinking mode
+        cache: Enable langchain in-memory cache
+        response_format: Pydantic model for structured output.
         
     Returns:
         ChatOpenAI configured instance ready for invocation
