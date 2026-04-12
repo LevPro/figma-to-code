@@ -31,7 +31,7 @@ Environment variables can also be used (CLI arguments take precedence):
     
     parser.add_argument("-i", "--input-dir", type=str, help="Input directory path")
     parser.add_argument("-o", "--output-dir", type=str, help="Output directory path")
-    parser.add_argument("-p", "--provider", type=str, choices=["openai", "ollama"], help="LLM provider")
+    parser.add_argument("-p", "--provider", type=str, choices=["openai", "ollama", "opencode"], help="LLM provider")
     parser.add_argument("-m", "--model", type=str, help="Model name")
     parser.add_argument("--base-url", type=str, help="Custom API endpoint")
     parser.add_argument("--api-key", type=str, help="API key for OpenAI")
@@ -209,7 +209,7 @@ class Config:
         if self.output_dir and not self.output_dir.parent.exists():
             errors.append(f"Output directory parent does not exist: {self.output_dir}")
         
-        if self.provider not in ("openai", "ollama"):
+        if self.provider not in ("openai", "ollama", "opencode"):
             errors.append(f"Invalid provider: {self.provider}. Must be 'openai' or 'ollama'")
         
         if self.provider == "openai" and not self.api_key:
