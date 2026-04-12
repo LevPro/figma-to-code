@@ -189,14 +189,14 @@ async def save_page(output_dir: Path, page_name: str, html: str, css: str, js: s
         page_dir = output_dir / safe_page_name
         page_dir.mkdir(parents=True, exist_ok=True)
         
-        async with open(page_dir / "index.html", "w", encoding="utf-8") as f:
-            await f.write(html)
+        with open(page_dir / "index.html", "w", encoding="utf-8") as f:
+            f.write(html)
         
-        async with open(page_dir / "styles.css", "w", encoding="utf-8") as f:
-            await f.write(css)
+        with open(page_dir / "styles.css", "w", encoding="utf-8") as f:
+            f.write(css)
         
-        async with open(page_dir / "script.js", "w", encoding="utf-8") as f:
-            await f.write(js)
+        with open(page_dir / "script.js", "w", encoding="utf-8") as f:
+            f.write(js)
         
         logger.info(f"Saved: {page_name}")
         return True
@@ -322,7 +322,7 @@ def main():
 
     result = {}
 
-    for name, page_data in data.get("pages").items():
+    for name, page_data in data.get("pages", {}).items():
         result[name] = []
         for i, block in enumerate(page_data.get("blocks")):
             response = generate_block(model, block.get('pc'), f"{name}_block_{i+1}", config) # section
