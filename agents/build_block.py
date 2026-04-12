@@ -1,4 +1,6 @@
-from typing import Dict, Any, Optional
+import json
+
+from typing import Dict, Any
 from langchain_core.messages import HumanMessage, SystemMessage
 
 SYSTEM_PROMPT = SystemMessage(
@@ -55,10 +57,10 @@ def build_block_message(json_data: Dict[str, Any]) -> HumanMessage:
     Returns:
         HumanMessage with combined content for LLM
     """
-    pc = json_data.get("pc")
-    mobile = json_data.get("mobile")
-    pc_json = pc.get("json")
-    mobile_json = mobile.get("json")
+    pc = json_data.get("pc", {})
+    mobile = json_data.get("mobile", {})
+    pc_json = json.dumps(pc.get("json"), separators=(',', ':'), ensure_ascii=False)
+    mobile_json = json.dumps(mobile.get("json"), separators=(',', ':'), ensure_ascii=False)
     pc_image = pc.get("image")
     mobile_image = pc.get("image")
 
