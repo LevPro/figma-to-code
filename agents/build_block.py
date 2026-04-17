@@ -3,6 +3,8 @@ import json
 from typing import Dict, Any
 from langchain_core.messages import HumanMessage, SystemMessage
 
+from data.preprocess_figma import preprocess_json, PreprocessConfig
+
 SYSTEM_PROMPT = SystemMessage(
     content="""# Role: Senior Frontend Developer (Expert in Pixel-Perfect Vanilla Web Development)
 
@@ -62,8 +64,15 @@ def build_block_message(json_data: Dict[str, Any]) -> HumanMessage:
     """
     pc = json_data.get("pc", {})
     mobile = json_data.get("mobile", {})
-    pc_json = json.dumps(pc.get("json"), separators=(',', ':'), ensure_ascii=False)
-    mobile_json = json.dumps(mobile.get("json"), separators=(',', ':'), ensure_ascii=False)
+    pc_json = pc.get("json", {})
+    mobile_json = mobile.get("json", {})
+
+    config = PreprocessConfig()
+    pc_json = preprocess_json(pc_json, config)
+    mobile_json = preprocess_json(mobile_json, config)
+
+    pc_json = json.dumps(pc_json, separators=(",", ":"), ensure_ascii=False)
+    mobile_json = json.dumps(mobile_json, separators=(",", ":"), ensure_ascii=False)
     pc_image = pc.get("image")
     mobile_image = mobile.get("image")
 
