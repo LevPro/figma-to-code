@@ -1,0 +1,7 @@
+langchain
+langchain-openai
+langchain-ollama
+langchain-google-genai
+langchain-anthropic
+pydantic
+pillow
