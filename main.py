@@ -60,9 +60,7 @@ def generate_block(
             max_dimension=config.max_image_dimension,
         )
         if reduction > 0:
-            logger.debug(
-                f"Compressed pc image for {block_name}: {reduction:.1f}% reduction"
-            )
+            logger.debug(f"Compressed pc image for {block_name}: {reduction:.1f}% reduction")
         json_data["pc"]["image"] = compressed_image
     if config.compress_images and json_data.get("mobile", {}).get("image"):
         compressed_image, reduction = compress_image_base64(
@@ -71,9 +69,7 @@ def generate_block(
             max_dimension=config.max_image_dimension,
         )
         if reduction > 0:
-            logger.debug(
-                f"Compressed mobile image for {block_name}: {reduction:.1f}% reduction"
-            )
+            logger.debug(f"Compressed mobile image for {block_name}: {reduction:.1f}% reduction")
         json_data["mobile"]["image"] = compressed_image
 
     message = build_block_message(json_data)
@@ -96,13 +92,9 @@ def generate_block(
             current_retry += 1
 
             if current_retry < config.max_retries:
-                logger.warning(
-                    f"Retry {current_retry}/{config.max_retries} for {block_name} "
-                )
+                logger.warning(f"Retry {current_retry}/{config.max_retries} for {block_name} ")
             else:
-                logger.error(
-                    f"Failed: {block_name} after {config.max_retries} attempts"
-                )
+                logger.error(f"Failed: {block_name} after {config.max_retries} attempts")
 
     raise RuntimeError(
         f"Failed to generate {block_name} after {config.max_retries} attempts"
@@ -151,9 +143,7 @@ def assemble_page(
             max_dimension=config.max_image_dimension,
         )
         if reduction > 0:
-            logger.debug(
-                f"Compressed image for {page_name}: {reduction:.1f}% reduction"
-            )
+            logger.debug(f"Compressed image for {page_name}: {reduction:.1f}% reduction")
         pc_image = compressed_image
     if config.compress_images and mobile_image:
         compressed_image, reduction = compress_image_base64(
@@ -162,14 +152,10 @@ def assemble_page(
             max_dimension=config.max_image_dimension,
         )
         if reduction > 0:
-            logger.debug(
-                f"Compressed image for {page_name}: {reduction:.1f}% reduction"
-            )
+            logger.debug(f"Compressed image for {page_name}: {reduction:.1f}% reduction")
         mobile_image = compressed_image
 
-    message = build_assemble_message(
-        header_result, footer_result, blocks, pc_image, mobile_image
-    )
+    message = build_assemble_message(header_result, footer_result, blocks, pc_image, mobile_image)
 
     try:
         response: AssemblyResponse = model.invoke([ASSEMBLE_SYSTEM_PROMPT, message])
@@ -389,6 +375,17 @@ def main():
         f"Configuration: provider={config.provider}, model={config.model}, cache={config.enable_cache}"
     )
 
+    # Enable LangSmith tracing if configured
+    if config.langchain_tracing_v2:
+        import os
+
+        os.environ["LANGCHAIN_TRACING_V2"] = "true"
+        if config.langchain_project:
+            os.environ["LANGCHAIN_PROJECT"] = config.langchain_project
+        if config.langchain_api_key:
+            os.environ["LANGCHAIN_API_KEY"] = config.langchain_api_key
+        logger.info(f"LangSmith tracing enabled: project={config.langchain_project}")
+
     # Initialize base LLM model based on configured provider
     base_llm = None
     if config.provider == "openai":
@@ -459,9 +456,7 @@ def main():
 
     # Validate input limits
     if len(data.get("pages", {})) > config.max_pages:
-        logger.warning(
-            f"Number of pages ({len(data['pages'])}) exceeds limit ({config.max_pages})"
-        )
+        logger.warning(f"Number of pages ({len(data['pages'])}) exceeds limit ({config.max_pages})")
 
     output_path = Path(config.output_dir)
 
@@ -471,9 +466,7 @@ def main():
 
     header = block_exist(output_path, "header")
     if header is None:
-        header = generate_block(
-            block_model, data.get("header"), "header", config
-        )  # header
+        header = generate_block(block_model, data.get("header"), "header", config)  # header
         save_block(
             output_path,
             "header",
@@ -484,9 +477,7 @@ def main():
 
     footer = block_exist(output_path, "footer")
     if footer is None:
-        footer = generate_block(
-            block_model, data.get("footer"), "footer", config
-        )  # footer
+        footer = generate_block(block_model, data.get("footer"), "footer", config)  # footer
         save_block(
             output_path,
             "footer",
@@ -505,9 +496,7 @@ def main():
             block_name = f"{page_name}_block_{i + 1}"
             response = block_exist(output_path, block_name)
             if response is None:
-                response = generate_block(
-                    block_model, block, block_name, config
-                )  # section
+                response = generate_block(block_model, block, block_name, config)  # section
                 save_block(
                     output_path,
                     block_name,
